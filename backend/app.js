@@ -7,6 +7,10 @@ const {ruruHTML} = require("ruru/server");
 require("dotenv").config();
 const port = process.env.PORT || 3000;
 
+// connect to database
+const connectDb = require("./src/config/db");
+connectDb();
+
 const app = express();
 
 app.use(body_parser.json());

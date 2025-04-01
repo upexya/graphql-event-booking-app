@@ -1,6 +1,7 @@
 const { GraphQLObjectType, GraphQLList, GraphQLNonNull } = require("graphql");
 
 const { EventType, EventInputType } = require("./types");
+const { createEvent } = require("./resolvers");
 
 const event_mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -10,17 +11,9 @@ const event_mutation = new GraphQLObjectType({
       args: {
         input: { type: new GraphQLNonNull(EventInputType) },
       },
-      resolve: (_, { input }) => {
+      resolve: async (_, { input }) => {
         const { title, description, date, price } = input;
-        return [
-          {
-            _id: Math.random().toString(),
-            title,
-            description,
-            date,
-            price,
-          },
-        ];
+        return await createEvent({ title, description, date, price });
       },
     },
   },
