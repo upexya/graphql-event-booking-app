@@ -24,14 +24,6 @@ app.use(
   })
 );
 
-// error handling middleware
-const {
-  errorHandler,
-  notFound,
-} = require("./src/middlewares/error.middleware");
-app.use(notFound);
-app.use(errorHandler);
-
 app.get("/", (_req, res) => {
   res.type("html");
   res.end(ruruHTML({ endpoint: "/graphql" }));

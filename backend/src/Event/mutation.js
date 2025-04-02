@@ -9,8 +9,19 @@ const create_event_mutation = {
     input: { type: new GraphQLNonNull(EventInputType) },
   },
   resolve: async (_, { input }) => {
-    const { title, description, date, price } = input;
-    return await createEvent({ title, description, date, price });
+    try {
+      const { title, description, date, price, location, created_by } = input;
+      return await createEvent({
+        title,
+        description,
+        date,
+        price,
+        location,
+        created_by,
+      });
+    } catch (error) {
+      throw new Error(error?.message || "Error creating event");
+    }
   },
 };
 

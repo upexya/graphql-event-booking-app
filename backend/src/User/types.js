@@ -13,7 +13,7 @@ const UserType = new GraphQLObjectType({
     _id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
-    password: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: GraphQLString },
     avatar: { type: new GraphQLNonNull(GraphQLString) },
     created_events: { type: new GraphQLList(new GraphQLNonNull(GraphQLID)) },
     attending_events: { type: new GraphQLList(new GraphQLNonNull(GraphQLID)) },

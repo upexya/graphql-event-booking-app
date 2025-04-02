@@ -12,6 +12,11 @@ const eventModel = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    location: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     price: {
       type: Number,
       required: true,

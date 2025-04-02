@@ -13,7 +13,7 @@ const create_user_mutation = {
     try {
       return await createUser({ name, email, password, avatar });
     } catch (error) {
-      throw new Error(error);
+      throw new Error(error?.message || "Error creating user");
     }
   },
 };
