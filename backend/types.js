@@ -19,7 +19,6 @@ const EventType = new GraphQLObjectType({
     date: { type: new GraphQLNonNull(GraphQLString) },
     price: { type: new GraphQLNonNull(GraphQLFloat) },
     created_by: { type: new GraphQLNonNull(UserType) }, // Uses UserType now
-    attendees: { type: new GraphQLList(new GraphQLNonNull(GraphQLID)) },
   }),
 });
 
@@ -44,7 +43,6 @@ const UserType = new GraphQLObjectType({
     password: { type: GraphQLString },
     avatar: { type: new GraphQLNonNull(GraphQLString) },
     created_events: { type: new GraphQLList(new GraphQLNonNull(EventType)) }, // Uses EventType now
-    attending_events: { type: new GraphQLList(new GraphQLNonNull(GraphQLID)) },
   }),
 });
 

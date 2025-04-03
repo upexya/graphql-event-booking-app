@@ -32,12 +32,6 @@ const UserModel = new mongoose.Schema(
         ref: "Event",
       },
     ],
-    attending_events: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
-      },
-    ],
   },
   {
     timestamps: true,
