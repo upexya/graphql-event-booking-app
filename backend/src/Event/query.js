@@ -1,6 +1,6 @@
 const { GraphQLList, GraphQLNonNull } = require("graphql");
 
-const { EventType } = require("./types");
+const { EventType } = require("../../types");
 const { getEvents } = require("./resolvers");
 
 const event_query = {

@@ -1,6 +1,6 @@
 const { GraphQLList, GraphQLNonNull } = require("graphql");
 
-const { UserType, UserInputType } = require("./types");
+const { UserType, UserInputType } = require("../../types");
 const { createUser } = require("./resolvers");
 
 const create_user_mutation = {

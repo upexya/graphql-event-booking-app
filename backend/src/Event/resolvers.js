@@ -2,6 +2,39 @@ const Event = require("./model");
 
 const { UserModel } = require("../User");
 
+const _events = async (event_ids) => {
+  try {
+    const events = await Event.find({ _id: { $in: event_ids } });
+    if (!events) {
+      throw new Error("Events not found");
+    }
+    return events.map((event) => ({
+      ...event._doc,
+      _id: event?._doc?._id.toString(),
+      created_by: _user(event?.created_by),
+    }));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const _user = async (user_id) => {
+  try {
+    const user = await UserModel.findById(user_id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return {
+      ...user._doc,
+      _id: user?._doc?._id.toString(),
+      password: null,
+      created_events: _events(user?.created_events),
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const createEvent = async ({
   title,
   description,
@@ -34,10 +67,14 @@ const createEvent = async ({
 const getEvents = async () => {
   try {
     const events = await Event.find();
-    return events.map((event) => ({
-      ...event?._doc,
-      _id: event?._doc?._id.toString(),
-    }));
+
+    return await Promise.all(
+      events.map(async (event) => ({
+        ...event._doc,
+        _id: event._doc._id.toString(),
+        created_by: await _user(event.created_by),
+      }))
+    );
   } catch (error) {
     throw new Error(error);
   }
