@@ -53,12 +53,19 @@ const createEvent = async ({
       date: new Date(date),
     });
     await event.save();
+    await event.populate("created_by", "-password");
 
     await UserModel.findByIdAndUpdate(created_by, {
       $push: { created_events: event?._doc?._id },
     });
 
-    return [{ ...event?._doc, _id: event?._doc?._id.toString() }];
+    return [
+      {
+        ...event?._doc,
+        _id: event?._doc?._id.toString(),
+        date: new Date(event._doc.date).toISOString(),
+      },
+    ];
   } catch (error) {
     throw new Error(error);
   }
@@ -66,15 +73,22 @@ const createEvent = async ({
 
 const getEvents = async () => {
   try {
-    const events = await Event.find();
+    const events = await Event.find().populate("created_by", "-password");
 
-    return await Promise.all(
-      events.map(async (event) => ({
-        ...event._doc,
-        _id: event._doc._id.toString(),
-        created_by: await _user(event.created_by),
-      }))
-    );
+    return events.map((event) => ({
+      ...event._doc,
+      _id: event._doc._id.toString(),
+      date: new Date(event._doc.date).toISOString(),
+    }));
+
+    // NOTE: Uncomment and return this instead if you want to fetch detailed user object, but it may cause performance issues
+    // return await Promise.all(
+    //   events.map(async (event) => ({
+    //     ...event._doc,
+    //     _id: event._doc._id.toString(),
+    //     // created_by: await _user(event.created_by),
+    //   }))
+    // );
   } catch (error) {
     throw new Error(error);
   }

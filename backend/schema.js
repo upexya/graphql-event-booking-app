@@ -2,6 +2,7 @@ const { GraphQLSchema, GraphQLObjectType } = require("graphql");
 
 const { event_query, create_event_mutation } = require("./src/Event");
 const {create_user_mutation} = require("./src/User");
+const {create_booking_mutation} = require("./src/Booking");
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -15,6 +16,7 @@ const schema = new GraphQLSchema({
     fields: {
       createEvent: create_event_mutation,
       createUser: create_user_mutation,
+      bookEvent: create_booking_mutation,
     },
   }),
 });

@@ -6,6 +6,7 @@ const {
   GraphQLFloat,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLEnumType,
 } = require("graphql");
 
 const EventType = new GraphQLObjectType({
@@ -35,6 +36,27 @@ const UserType = new GraphQLObjectType({
   }),
 });
 
+const BookingType = new GraphQLObjectType({
+  name: "Booking",
+  fields: () => ({
+    _id: { type: new GraphQLNonNull(GraphQLID) },
+    event: { type: new GraphQLNonNull(EventType) },
+    user: { type: new GraphQLNonNull(UserType) },
+    status: { type: new GraphQLNonNull(BookingStatusEnum) },
+    createdAt: { type: new GraphQLNonNull(GraphQLString) },
+    updatedAt: { type: new GraphQLNonNull(GraphQLString) },
+  }),
+});
+
+const BookingStatusEnum = new GraphQLEnumType({
+  name: "BookingStatus",
+  values: {
+    PENDING: { value: "PENDING" },
+    CONFIRMED: { value: "CONFIRMED" },
+    CANCELLED: { value: "CANCELLED" },
+  },
+});
+
 const EventInputType = new GraphQLInputObjectType({
   name: "EventInput",
   fields: {
@@ -57,9 +79,20 @@ const UserInputType = new GraphQLInputObjectType({
   },
 });
 
+const BookingInputType = new GraphQLInputObjectType({
+  name: "BookingInput",
+  fields: {
+    event_id: { type: new GraphQLNonNull(GraphQLID) },
+    user_id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: BookingStatusEnum },
+  },
+});
+
 module.exports = {
   UserType,
   UserInputType,
   EventType,
   EventInputType,
+  BookingType,
+  BookingInputType,
 };
