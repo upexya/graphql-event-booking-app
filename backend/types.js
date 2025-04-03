@@ -23,6 +23,18 @@ const EventType = new GraphQLObjectType({
   }),
 });
 
+const EventInputType = new GraphQLInputObjectType({
+  name: "EventInput",
+  fields: {
+    title: { type: new GraphQLNonNull(GraphQLString) },
+    description: { type: new GraphQLNonNull(GraphQLString) },
+    location: { type: new GraphQLNonNull(GraphQLString) },
+    date: { type: new GraphQLNonNull(GraphQLString) },
+    price: { type: new GraphQLNonNull(GraphQLFloat) },
+    created_by: { type: new GraphQLNonNull(GraphQLID) },
+  },
+});
+
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
@@ -34,6 +46,16 @@ const UserType = new GraphQLObjectType({
     created_events: { type: new GraphQLList(new GraphQLNonNull(EventType)) }, // Uses EventType now
     attending_events: { type: new GraphQLList(new GraphQLNonNull(GraphQLID)) },
   }),
+});
+
+const UserInputType = new GraphQLInputObjectType({
+  name: "UserInput",
+  fields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    avatar: { type: new GraphQLNonNull(GraphQLString) },
+  },
 });
 
 const BookingType = new GraphQLObjectType({
@@ -57,33 +79,19 @@ const BookingStatusEnum = new GraphQLEnumType({
   },
 });
 
-const EventInputType = new GraphQLInputObjectType({
-  name: "EventInput",
-  fields: {
-    title: { type: new GraphQLNonNull(GraphQLString) },
-    description: { type: new GraphQLNonNull(GraphQLString) },
-    location: { type: new GraphQLNonNull(GraphQLString) },
-    date: { type: new GraphQLNonNull(GraphQLString) },
-    price: { type: new GraphQLNonNull(GraphQLFloat) },
-    created_by: { type: new GraphQLNonNull(GraphQLID) },
-  },
-});
-
-const UserInputType = new GraphQLInputObjectType({
-  name: "UserInput",
-  fields: {
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    email: { type: new GraphQLNonNull(GraphQLString) },
-    password: { type: new GraphQLNonNull(GraphQLString) },
-    avatar: { type: new GraphQLNonNull(GraphQLString) },
-  },
-});
-
 const BookingInputType = new GraphQLInputObjectType({
   name: "BookingInput",
   fields: {
     event_id: { type: new GraphQLNonNull(GraphQLID) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: BookingStatusEnum },
+  },
+});
+
+const BookingUpdateInputType = new GraphQLInputObjectType({
+  name: "BookingUpdateInput",
+  fields: {
+    _id: { type: new GraphQLNonNull(GraphQLID) },
     status: { type: BookingStatusEnum },
   },
 });
@@ -95,4 +103,5 @@ module.exports = {
   EventInputType,
   BookingType,
   BookingInputType,
+  BookingUpdateInputType,
 };
