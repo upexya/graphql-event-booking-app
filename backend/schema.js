@@ -21,7 +21,7 @@ const schema = new GraphQLSchema({
     fields: {
       createEvent: create_event_mutation,
       createUser: create_user_mutation,
-      bookEvent: create_booking_mutation,
+      createBooking: create_booking_mutation,
       updateBookingStatus: update_booking_status,
     },
   }),

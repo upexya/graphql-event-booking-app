@@ -1,6 +1,6 @@
 const Event = require("./model");
-
 const { UserModel } = require("../User");
+const { dateToString } = require("../utils/date");
 
 const _events = async (event_ids) => {
   try {
@@ -35,6 +35,14 @@ const _user = async (user_id) => {
   }
 };
 
+const transformEvent = (event) => {
+  return {
+    ...event._doc,
+    _id: event._doc._id.toString(),
+    date: dateToString(event._doc.date),
+  };
+};
+
 const createEvent = async ({
   title,
   description,
@@ -59,13 +67,7 @@ const createEvent = async ({
       $push: { created_events: event?._doc?._id },
     });
 
-    return [
-      {
-        ...event?._doc,
-        _id: event?._doc?._id.toString(),
-        date: new Date(event._doc.date).toISOString(),
-      },
-    ];
+    return [transformEvent(event)];
   } catch (error) {
     throw new Error(error);
   }
@@ -75,11 +77,7 @@ const getEvents = async () => {
   try {
     const events = await Event.find().populate("created_by", "-password");
 
-    return events.map((event) => ({
-      ...event._doc,
-      _id: event._doc._id.toString(),
-      date: new Date(event._doc.date).toISOString(),
-    }));
+    return events.map((event) => transformEvent(event));
 
     // NOTE: Uncomment and return this instead if you want to fetch detailed user object, but it may cause performance issues
     // return await Promise.all(

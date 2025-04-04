@@ -1,12 +1,14 @@
 const Booking = require("./model");
 const { UserModel } = require("../User");
 
+const { dateToString } = require("../utils/date");
+
 const populateBooking = async (booking) => {
   return {
     ...booking._doc,
     _id: booking?.id,
-    createdAt: new Date(booking?.createdAt).toISOString(),
-    updatedAt: new Date(booking?.updatedAt).toISOString(),
+    createdAt: dateToString(booking?.createdAt),
+    updatedAt: dateToString(booking?.updatedAt),
     event: {
       ...booking?.event?._doc,
       _id: booking?.event?.id,
@@ -22,7 +24,7 @@ const populateBooking = async (booking) => {
   };
 };
 
-const bookEvent = async ({ event_id, user_id, status }) => {
+const createBooking = async ({ event_id, user_id, status }) => {
   try {
     // check if user has already booked the event
     const existingBooking = await Booking.findOne({
@@ -88,7 +90,7 @@ const getBookings = async () => {
 };
 
 module.exports = {
-  bookEvent,
+  createBooking,
   updateBookingStatus,
   getBookings,
 };
