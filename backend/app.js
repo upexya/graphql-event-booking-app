@@ -4,6 +4,8 @@ const body_parser = require("body-parser");
 const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
 
+const auth = require("./src/middlewares/auth.middleware");
+
 require("dotenv").config();
 const port = process.env.PORT || 3000;
 
@@ -14,6 +16,7 @@ connectDb();
 const app = express();
 
 app.use(body_parser.json());
+app.use(auth);
 
 const schema = require("./schema");
 app.use(
@@ -21,7 +24,10 @@ app.use(
   createHandler({
     schema,
     graphiql: true,
-  })
+    context: async (req, res) => {
+      return { req, res };
+    }
+  }),
 );
 
 app.get("/", (_req, res) => {

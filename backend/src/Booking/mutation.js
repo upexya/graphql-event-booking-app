@@ -12,7 +12,11 @@ const create_booking_mutation = {
   args: {
     input: { type: new GraphQLNonNull(BookingInputType) },
   },
-  resolve: async (_, { input }) => {
+  resolve: async (_, { input }, { req }) => {
+    if (!req?.raw?.is_auth) {
+      throw new Error("Unauthorized");
+    }
+
     try {
       const { event_id, user_id, status } = input;
       return createBooking({ event_id, user_id, status });
@@ -27,7 +31,11 @@ const update_booking_status = {
   args: {
     input: { type: new GraphQLNonNull(BookingUpdateInputType) },
   },
-  resolve: async (_, { input }) => {
+  resolve: async (_, { input }, { req }) => {
+    if (!req?.raw?.is_auth) {
+      throw new Error("Unauthorized");
+    }
+
     try {
       const { _id, status } = input;
       return updateBookingStatus({ _id, status });

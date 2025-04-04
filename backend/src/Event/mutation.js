@@ -8,7 +8,11 @@ const create_event_mutation = {
   args: {
     input: { type: new GraphQLNonNull(EventInputType) },
   },
-  resolve: async (_, { input }) => {
+  resolve: async (_, { input }, { req }) => {
+    if (!req?.raw?.is_auth) {
+      throw new Error("Unauthorized");
+    }
+
     try {
       const { title, description, date, price, location, created_by } = input;
       return await createEvent({

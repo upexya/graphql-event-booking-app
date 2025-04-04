@@ -56,6 +56,22 @@ const UserInputType = new GraphQLInputObjectType({
   },
 });
 
+const UserLoginInputType = new GraphQLInputObjectType({
+  name: "UserLoginInput",
+  fields: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+});
+
+const UserLoginType = new GraphQLObjectType({
+  name: "UserLogin",
+  fields: () => ({
+    token: { type: new GraphQLNonNull(GraphQLString) },
+    user: { type: new GraphQLNonNull(UserType) },
+  }),
+});
+
 const BookingType = new GraphQLObjectType({
   name: "Booking",
   fields: () => ({
@@ -97,6 +113,8 @@ const BookingUpdateInputType = new GraphQLInputObjectType({
 module.exports = {
   UserType,
   UserInputType,
+  UserLoginInputType,
+  UserLoginType,
   EventType,
   EventInputType,
   BookingType,

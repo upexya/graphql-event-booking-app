@@ -1,7 +1,7 @@
 const { GraphQLSchema, GraphQLObjectType } = require("graphql");
 
 const { event_query, create_event_mutation } = require("./src/Event");
-const { create_user_mutation } = require("./src/User");
+const { create_user_mutation, login_query } = require("./src/User");
 const {
   create_booking_mutation,
   update_booking_status,
@@ -14,6 +14,7 @@ const schema = new GraphQLSchema({
     fields: {
       events: event_query,
       bookings: bookings_query,
+      login: login_query,
     },
   }),
   mutation: new GraphQLObjectType({
