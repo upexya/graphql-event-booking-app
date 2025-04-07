@@ -1,10 +1,18 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import routes from "@constants/routes";
+
 import "./App.css";
 
 function App() {
   return (
-  <div className="bg-primary">
-  <p className="text-3xl font-bold underline font-work-sans">hello wold</p>
-  </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={routes.HOME} element={<>home </>}></Route>
+        <Route path={routes.AUTH} element={<>auth</>} />
+        <Route path="*" element={<>page not found</>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
