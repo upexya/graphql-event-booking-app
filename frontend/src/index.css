@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --color-primary-gray-100: #f0f4f8;
+  --color-primary-gray-200: #e6ebf1;
+  --color-primary-gray-300: #d6dfe6;
+  --color-primary-gray-400: #2b3f53;
+  --color-primary-gray-500: #384c64;
+  --color-primary: #75c0c2;
+  --color-primary-200: #406473;
+  --color-primary-400: #2b3f53;
+  --color-secondary: #ec617b;
+  --font-work-sans: 'Work Sans', sans-serif;
+}
