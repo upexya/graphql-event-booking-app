@@ -17,9 +17,54 @@ export default function Navbar() {
 
   const [navbar_expanded, setNavbarExpanded] = useState(false);
 
+  const closeNavbar = () => {
+    if (navbar_expanded) setNavbarExpanded(false);
+  };
+
+  const user_profile_content = (
+    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+      <div className="relative ml-3">
+        <div>
+          <button
+            type="button"
+            className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+            id="user-menu-button"
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            <span className="absolute -inset-1.5"></span>
+            <span className="sr-only">Open user menu</span>
+            <img
+              className="size-8 rounded-full"
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const login_or_signup_content = (
+    <div
+      className={`absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 border-0 sm:border rounded-md hover:border-primary ${
+        pathname === routes.AUTH ? "border-primary" : "border-primary-200"
+      }`}
+    >
+      <Link
+        to={routes.AUTH}
+        className={`px-3 py-2 font-semibold hover:text-primary ${
+          pathname === routes.AUTH ? "text-primary" : "text-primary-200"
+        }`}
+      >
+        Sign up / Login
+      </Link>
+    </div>
+  );
+
   return (
     <nav className=" relative shadow-xs">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 fixed w-100 bg-white z-10">
+      <div className="mx-auto px-2 sm:px-6 lg:px-8 fixed w-full bg-white z-10">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* <!-- Mobile menu button--> */}
@@ -39,6 +84,7 @@ export default function Navbar() {
               to={routes.HOME}
               className="px-3 py-2 font-semibold text-primary-200 hover:text-primary"
               aria-current="page"
+              onClick={closeNavbar}
             >
               <div className="flex shrink-0 items-center">
                 <img
@@ -48,6 +94,7 @@ export default function Navbar() {
                 />
               </div>
             </Link>
+            {/* Desktop navigation links */}
             <div className="hidden sm:ml-6 sm:flex items-center">
               <div className="flex items-center space-x-4">
                 {nav_items.map((nav) => (
@@ -67,28 +114,7 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {/* <!-- Profile dropdown --> */}
-            <div className="relative ml-3">
-              <div>
-                <button
-                  type="button"
-                  className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-                  id="user-menu-button"
-                  aria-expanded="false"
-                  aria-haspopup="true"
-                >
-                  <span className="absolute -inset-1.5"></span>
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    className="size-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
+          {true ? login_or_signup_content : user_profile_content}
         </div>
       </div>
       <div
@@ -98,6 +124,7 @@ export default function Navbar() {
         }}
       />
 
+      {/* Navigation for mobile view */}
       <div
         className={`sm:hidden absolute w-full ${
           navbar_expanded
@@ -111,6 +138,7 @@ export default function Navbar() {
             <Link
               key={`mobile-navlink-${item.name}`}
               to={item.link}
+              onClick={closeNavbar}
               className="block px-3 py-2 text-base font-medium text-white"
             >
               {item.name}
