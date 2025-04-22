@@ -6,7 +6,7 @@ import "./index.css";
 import App from "./App";
 
 const client = new ApolloClient({
-  uri: "https://flyby-router-demo.herokuapp.com/",
+  uri: import.meta.env.VITE_BACKEND_URL,
   cache: new InMemoryCache(),
 });
 
