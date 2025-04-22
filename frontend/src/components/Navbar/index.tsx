@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -12,14 +13,19 @@ const nav_items = [
 ];
 
 export default function Navbar() {
+  const { pathname } = useLocation();
+
+  const [navbar_expanded, setNavbarExpanded] = useState(false);
+
   return (
-    <nav className="shadow-xs">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <nav className=" relative shadow-xs">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 fixed w-100 bg-white z-10">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* <!-- Mobile menu button--> */}
             <button
               type="button"
+              onClick={() => setNavbarExpanded(!navbar_expanded)}
               className="relative inline-flex items-center justify-center p-2 text-primary"
               aria-controls="mobile-menu"
               aria-expanded="false"
@@ -42,12 +48,17 @@ export default function Navbar() {
                 />
               </div>
             </Link>
-            <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4">
+            <div className="hidden sm:ml-6 sm:flex items-center">
+              <div className="flex items-center space-x-4">
                 {nav_items.map((nav) => (
                   <Link
+                    key={`desktop-navlink-${nav.name}`}
                     to={nav.link}
-                    className="px-3 py-2 font-semibold text-primary-200 hover:text-primary"
+                    className={`px-3 py-2 font-semibold hover:text-primary ${
+                      pathname === nav.link
+                        ? "text-primary"
+                        : "text-primary-200"
+                    }`}
                     aria-current="page"
                   >
                     {nav.name}
@@ -80,11 +91,25 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      <div
+        style={{
+          height: "64px",
+          width: "100%",
+        }}
+      />
 
-      <div className="sm:hidden" id="mobile-menu">
-        <div className="space-y-1 px-2 pt-2 pb-3 bg-primary">
+      <div
+        className={`sm:hidden absolute w-full ${
+          navbar_expanded
+            ? "animate-slide-down bg-backdrop"
+            : "animate-slide-up hidden"
+        }`}
+        style={{ height: "calc(100vh - 64px)" }}
+      >
+        <div className={`space-y-1 px-2 pt-2 pb-3 bg-primary`}>
           {nav_items.map((item) => (
             <Link
+              key={`mobile-navlink-${item.name}`}
               to={item.link}
               className="block px-3 py-2 text-base font-medium text-white"
             >

@@ -19,5 +19,53 @@ body {
   --color-primary-200: #406473;
   --color-primary-400: #2b3f53;
   --color-secondary: #ec617b;
+  --color-backdrop: #00000033;
   --font-work-sans: 'Work Sans', sans-serif;
+}
+
+.animate-slide-down {
+	animation-name: slideDown;
+	-webkit-animation-name: slideDown;	
+
+	animation-duration: .5s;	
+	-webkit-animation-duration: .5s;
+
+	animation-timing-function: ease;	
+	-webkit-animation-timing-function: ease;	
+}
+
+.animate-slide-up {
+	animation-name: slideUp;
+	-webkit-animation-name: slideUp;	
+
+	animation-duration: .5s;	
+	-webkit-animation-duration: .5s;
+
+	animation-timing-function: ease;	
+	-webkit-animation-timing-function: ease;	
+}
+
+@keyframes slideDown {
+	0% {
+		transform: translateY(-100%);
+	}		
+	100% {
+		transform: translateY(0%);
+	}		
+}
+
+@keyframes slideUp {
+	0% {
+		transform: translateY(0%);
+    opacity: 1;
+    display: block;
+	}		
+	99% {
+		transform: translateY(-99%);
+    opacity: 0;
+	}
+  100% {
+		transform: translateY(-100%);
+    display: none;
+  }		
 }
