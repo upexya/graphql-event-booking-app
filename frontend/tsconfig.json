@@ -14,7 +14,8 @@
       "@hooks/*": ["hooks/*"],
       "@constants/*": ["constants/*"],
       "@services/*": ["services/*"],
-      "@views/*": ["views/*"]
+      "@views/*": ["views/*"],
+      "@assets/*": ["assets/*"]
     }
   },
   "include": ["src"]
