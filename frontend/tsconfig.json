@@ -15,7 +15,9 @@
       "@constants/*": ["constants/*"],
       "@services/*": ["services/*"],
       "@views/*": ["views/*"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@queries/*": ["queries/*"],
+      "@config/*": ["config/*"]
     }
   },
   "include": ["src"]

@@ -126,7 +126,7 @@ export default function Navbar() {
 
       {/* Navigation for mobile view */}
       <div
-        className={`sm:hidden absolute w-full ${
+        className={`sm:hidden absolute w-full z-1 ${
           navbar_expanded
             ? "animate-slide-down bg-backdrop"
             : "animate-slide-up hidden"

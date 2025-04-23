@@ -1,6 +1,8 @@
 export default {
-    HOME: "/",
-    AUTH: "/auth",
-    BOOKINGS: "/bookings",
-    EVENTS: "/events",
-}
+  HOME: "/",
+  AUTH: "/auth",
+  LOGIN: "/auth?tab=login",
+  SIGNUP: "/auth?tab=signup",
+  BOOKINGS: "/bookings",
+  EVENTS: "/events",
+};

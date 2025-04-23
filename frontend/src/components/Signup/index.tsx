@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -7,13 +8,14 @@ import Spinner from "@components/Common/Spinner";
 import Toast from "@components/Common/Toast";
 
 import routes from "@constants/routes";
+import { REGISTER_USER } from "@queries/auth";
 
 export default function Signup() {
   const navigate = useNavigate();
 
+  const [registerUser, { loading, error }] = useMutation(REGISTER_USER);
+
   const [show_password, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [form_state, setFormState] = useState({
     name: "",
     email: "",
@@ -29,33 +31,26 @@ export default function Signup() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // try {
-    //   setLoading(true);
-    //   const res = await registerService(form_state);
-    //   if (res.error) {
-    //     setErrorMsg(res.message);
-    //     setLoading(false);
-    //     return;
-    //   }
+    const { name, email, password, avatar } = form_state;
 
-    //   const { token, ...user } = res;
-    //   localStorage.setItem("token", token);
-    //   localStorage.setItem("user", JSON.stringify(user));
-    //   dispatch(setUser(user));
+    if (loading || !name.trim() || !email.trim() || !password.trim()) return;
 
-    //   setErrorMsg("");
-    //   setLoading(false);
-    //   // TODO: add logic for callback url
-    //   navigate(routes.CHATS);
-    // } catch (error: any) {
-    //   setErrorMsg(error?.message ?? "An error occurred");
-    //   setLoading(false);
-    // }
+    await registerUser({
+      variables: {
+        input: {
+          name,
+          email,
+          password,
+          avatar,
+        },
+      },
+    });
+    navigate(routes.LOGIN);
   };
 
   return (
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      {errorMsg ? <Toast type="danger" message={errorMsg} /> : null}
+      {error ? <Toast type="danger" message={error?.message} /> : null}
 
       <form className="space-y-6" onSubmit={handleFormSubmit}>
         <div>
@@ -150,6 +145,7 @@ export default function Signup() {
         <div>
           <button
             type="submit"
+            disabled={loading}
             className="flex w-full cursor-pointer justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-primary-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-100"
           >
             {loading ? (
@@ -165,7 +161,7 @@ export default function Signup() {
       <p className="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
         <Link
-          to="/auth?tab=login"
+          to={routes.LOGIN}
           className="font-semibold text-primary hover:text-primary-100"
         >
           {" "}

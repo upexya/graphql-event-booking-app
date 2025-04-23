@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLazyQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,14 +8,15 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "@components/Common/Spinner";
 import Toast from "@components/Common/Toast";
 
+import { LOGIN_USER } from "@queries/auth";
 import routes from "@constants/routes";
 
 export default function Login() {
   const navigate = useNavigate();
 
+  const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN_USER);
+
   const [show_password, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [form_state, setFormState] = useState({
     email: "",
     password: "",
@@ -28,32 +30,20 @@ export default function Login() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // try {
-    //   setLoading(true);
-    //   const res = await loginService(form_state);
-    //   if (res.error) {
-    //     setErrorMsg(res.message);
-    //     setLoading(false);
-    //     return;
-    //   }
+    const { email, password } = form_state;
+    if (loading || !email.trim() || !password.trim()) return;
 
-    //   const { token, ...user } = res;
-    //   localStorage.setItem("token", token);
-    //   localStorage.setItem("user", JSON.stringify(user));
-    //   dispatch(setUser(user));
-    //   setErrorMsg("");
-    //   setLoading(false);
-    //   // TODO: add logic for callback url
-    //   navigate(routes.CHATS);
-    // } catch (error: any) {
-    //   setErrorMsg(error?.message ?? "An error occurred");
-    //   setLoading(false);
-    // }
+    await loginUser({ variables: { input: { email, password } } });
+    if (data?.login) {
+      const { token, user } = data.login;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    }
   };
 
   return (
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      {errorMsg ? <Toast type="danger" message={errorMsg} /> : null}
+      {error?.message ? <Toast type="danger" message={error?.message} /> : null}
 
       <form className="space-y-6" onSubmit={handleFormSubmit}>
         <div>
@@ -126,7 +116,7 @@ export default function Login() {
       <p className="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?
         <Link
-          to="/auth?tab=signup"
+          to={routes.SIGNUP}
           className="font-semibold text-primary hover:text-primary-100"
         >
           {" "}

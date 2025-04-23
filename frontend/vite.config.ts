@@ -21,6 +21,8 @@ export default defineConfig({
       "@views": path.resolve(__dirname, "src/views"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
       "@assets": path.resolve(__dirname, "src/assets"),
+      "@queries": path.resolve(__dirname, "src/queries"),
+      "@config": path.resolve(__dirname, "src/config"),
     },
   },
 });
