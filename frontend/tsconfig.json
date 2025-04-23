@@ -17,7 +17,8 @@
       "@views/*": ["views/*"],
       "@assets/*": ["assets/*"],
       "@queries/*": ["queries/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@context/*": ["context/*"]
     }
   },
   "include": ["src"]

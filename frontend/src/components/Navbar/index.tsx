@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import images from "@constants/images";
 import routes from "@constants/routes";
+
+import { UserContext } from "@context/user";
 
 const nav_items = [
   { name: "Home", link: routes.HOME },
@@ -14,33 +16,59 @@ const nav_items = [
 
 export default function Navbar() {
   const { pathname } = useLocation();
+  const { user, clearUser } = useContext(UserContext);
 
   const [navbar_expanded, setNavbarExpanded] = useState(false);
+  const [show_user_dropdown, setShowUserDropdown] = useState(false);
 
   const closeNavbar = () => {
     if (navbar_expanded) setNavbarExpanded(false);
   };
 
+  const handleLogout = () => {
+    clearUser();
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
+  const user_dropdown = show_user_dropdown ? (
+    <div
+      className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden hidden sm:flex"
+      role="menu"
+      aria-orientation="vertical"
+      aria-labelledby="user-menu-button"
+      tabIndex={-1}
+    >
+      <Link
+        to="#"
+        className="block px-4 py-2 text-sm text-gray-700"
+        role="menuitem"
+        tabIndex={-1}
+        onClick={handleLogout}
+      >
+        Sign out
+      </Link>
+    </div>
+  ) : null;
+
   const user_profile_content = (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
       <div className="relative ml-3">
-        <div>
-          <button
-            type="button"
-            className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-            id="user-menu-button"
-            aria-expanded="false"
-            aria-haspopup="true"
-          >
-            <span className="absolute -inset-1.5"></span>
-            <span className="sr-only">Open user menu</span>
-            <img
-              className="size-8 rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
-          </button>
-        </div>
+        <button
+          type="button"
+          className="relative flex cursor-pointer rounded-full bg-white text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary focus:outline-hidden"
+          id="user-menu-button"
+          aria-expanded="false"
+          aria-haspopup="true"
+          onClick={() => setShowUserDropdown(!show_user_dropdown)}
+        >
+          <img
+            className="size-8 rounded-full object-cover"
+            src={user?.user?.avatar || images.default_user_img}
+            alt=""
+          />
+        </button>
+        {user_dropdown}
       </div>
     </div>
   );
@@ -114,7 +142,7 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          {true ? login_or_signup_content : user_profile_content}
+          {!user?.user?._id ? login_or_signup_content : user_profile_content}
         </div>
       </div>
       <div
@@ -144,6 +172,18 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
+          {user?.user?._id ? (
+            <Link
+              to="#"
+              onClick={() => {
+                handleLogout();
+                closeNavbar();
+              }}
+              className="block px-3 py-2 text-base font-medium text-white"
+            >
+              Logout
+            </Link>
+          ) : null}
         </div>
       </div>
     </nav>

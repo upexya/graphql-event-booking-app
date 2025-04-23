@@ -23,6 +23,7 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "src/assets"),
       "@queries": path.resolve(__dirname, "src/queries"),
       "@config": path.resolve(__dirname, "src/config"),
+      "@context": path.resolve(__dirname, "src/context"),
     },
   },
 });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,10 +8,13 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "@components/Common/Spinner";
 import Toast from "@components/Common/Toast";
 
+import { UserContext } from "@context/user";
+
 import { LOGIN_USER } from "@queries/auth";
 import routes from "@constants/routes";
 
 export default function Login() {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN_USER);
@@ -21,6 +24,19 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (!loading && data?.login) {
+      const { token, user } = data.login;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser({
+        token,
+        user,
+      });
+      navigate(routes.HOME);
+    }
+  }, [loading]);
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState((prev) => {
@@ -33,12 +49,7 @@ export default function Login() {
     const { email, password } = form_state;
     if (loading || !email.trim() || !password.trim()) return;
 
-    await loginUser({ variables: { input: { email, password } } });
-    if (data?.login) {
-      const { token, user } = data.login;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-    }
+    loginUser({ variables: { input: { email, password } } });
   };
 
   return (

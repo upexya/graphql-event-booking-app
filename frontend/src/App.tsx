@@ -1,3 +1,4 @@
+import { useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import routes from "@constants/routes";
@@ -9,9 +10,21 @@ import Home from "@views/Home";
 
 import Layout from "@components/Layout";
 
+import { UserContext } from "@context/user";
+
 import "./App.css";
 
 function App() {
+  const { setUser } = useContext(UserContext);
+  useEffect(() => {
+    let user: any = localStorage.getItem("user");
+    let token: string = localStorage.getItem("token") || "";
+    if (token && user) {
+      user = JSON.parse(user);
+      setUser({ token, user });
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
