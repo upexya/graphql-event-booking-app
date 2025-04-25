@@ -1,5 +1,7 @@
 import { createContext, useState } from "react";
 
+import client from "@config/apollo";
+
 const initial_value = {
   token: "",
   user: {
@@ -22,6 +24,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearUser = () => {
     setUser(initial_value);
+    // Since Apollo caches all of your query results,
+    // it's important to get rid of them when the login state changes.
+    client.clearStore();
   };
 
   return (

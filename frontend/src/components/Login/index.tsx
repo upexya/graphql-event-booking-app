@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +16,7 @@ import routes from "@constants/routes";
 export default function Login() {
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN_USER);
 
@@ -34,7 +35,7 @@ export default function Login() {
         token,
         user,
       });
-      navigate(routes.HOME);
+      navigate(state?.path || routes.HOME);
     }
   }, [loading]);
 

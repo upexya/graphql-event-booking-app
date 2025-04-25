@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,18 +8,24 @@ import routes from "@constants/routes";
 
 import { UserContext } from "@context/user";
 
-const nav_items = [
-  { name: "Home", link: routes.HOME },
-  { name: "Events", link: routes.EVENTS },
-  { name: "Bookings", link: routes.BOOKINGS },
-];
-
 export default function Navbar() {
   const { pathname } = useLocation();
   const { user, clearUser } = useContext(UserContext);
 
+  const is_logged_in = user?.user?._id;
+
   const [navbar_expanded, setNavbarExpanded] = useState(false);
   const [show_user_dropdown, setShowUserDropdown] = useState(false);
+
+  const nav_items = useMemo(() => {
+    let items = [
+      { name: "Home", link: routes.HOME },
+      { name: "Events", link: routes.EVENTS },
+    ];
+    if (is_logged_in) items.push({ name: "Bookings", link: routes.BOOKINGS });
+
+    return items;
+  }, [is_logged_in]);
 
   const closeNavbar = () => {
     if (navbar_expanded) setNavbarExpanded(false);
@@ -27,6 +33,8 @@ export default function Navbar() {
 
   const handleLogout = () => {
     clearUser();
+    closeNavbar();
+    if (show_user_dropdown) setShowUserDropdown(false);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
@@ -142,7 +150,7 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          {!user?.user?._id ? login_or_signup_content : user_profile_content}
+          {!is_logged_in ? login_or_signup_content : user_profile_content}
         </div>
       </div>
       <div
@@ -172,13 +180,10 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-          {user?.user?._id ? (
+          {is_logged_in ? (
             <Link
               to="#"
-              onClick={() => {
-                handleLogout();
-                closeNavbar();
-              }}
+              onClick={handleLogout}
               className="block px-3 py-2 text-base font-medium text-white"
             >
               Logout
