@@ -1,12 +1,13 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import TextField from "@components/Common/FormElements/textfield";
+import DatePicker from "@components/Common/FormElements/dayPicker";
 
 interface EventInput {
   title: string;
   description: string;
   location: string;
-  date: string;
+  date: Date;
   price?: number;
 }
 
@@ -14,6 +15,10 @@ export default function AddEventForm() {
   const {
     register,
     handleSubmit,
+    control,
+    getValues,
+    setValue,
+    trigger,
     formState: { errors, isValid },
   } = useForm<EventInput>({ mode: "all" });
 
@@ -63,6 +68,17 @@ export default function AddEventForm() {
           type="number"
           error_message={errors?.price?.message}
           helper_text="Leave this field empty if it's a free event."
+        />
+      </div>
+      <div className="mb-5">
+        <DatePicker
+          id="date"
+          label="Select Date and Time for event"
+          getValues={getValues}
+          setValue={setValue}
+          trigger={trigger}
+          control={control}
+          error_message={errors?.date?.message}
         />
       </div>
 

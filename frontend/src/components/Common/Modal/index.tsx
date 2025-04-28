@@ -23,8 +23,9 @@ export default function Modal(props: {
         <div className="relative p-10 w-full h-full flex justify-center items-center">
           {/* <!-- Modal content --> */}
           <div
-            className="relative bg-white rounded-lg shadow-sm max-w-2xl"
+            className="relative bg-white rounded-lg shadow-sm max-w-2xl overflow-y-scroll"
             style={{
+              maxHeight: "95vh",
               width: width || "auto",
             }}
           >
