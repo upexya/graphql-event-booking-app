@@ -1,20 +1,27 @@
 import { useState } from "react";
-import { useQuery } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { useQuery, NetworkStatus } from "@apollo/client";
 
 import Toast from "@components/Common/Toast";
 import ModalDialog from "@components/Common/Modal";
 import AddEventForm from "@components/Forms/addEvent";
 import LoadingScreen from "@components/Common/LoadingScreen";
+import EventCardList, { IEvent } from "@components/Events/eventCardList";
 
 import { GET_EVENTS } from "@queries/event";
+import Spinner from "@components/Common/Spinner";
 
 export default function Events() {
   const [open_dialog, setOpenDialog] = useState(false);
 
-  const { data, loading, error } = useQuery(GET_EVENTS);
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    GET_EVENTS,
+    {
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
-  const onCreateEvent = () => {
+  const onCreateEvent = (new_event: IEvent) => {
+    refetch();
     setOpenDialog(false);
   };
 
@@ -57,41 +64,17 @@ export default function Events() {
     </section>
   );
 
-  const content = (
-    <li className="flex justify-between py-5 px-3 border-b-1 border-gray-200 hover:shadow-lg">
-      <Link to="#">
-        <div className="min-w-0 flex-auto">
-          <p className="text-sm/6 font-semibold text-primary">
-            Title of the event
-          </p>
-          <p className="mt-1 truncate text-xs/5 text-gray-500">Location</p>
-          <p className="text-sm/6 text-gray-900">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
-          </p>
-        </div>
-      </Link>
-    </li>
-  );
   return (
     <div>
       {jumbotron_content}
       <h1 className="mb-4 text-lg font-bold tracking-tight leading-none text-gray-600 md:text-2xl lg:text-3xl">
         Explore events
       </h1>
-      <ul role="list">
-        {content}
-        {content}
-        {content}
-      </ul>
-
+      {networkStatus === NetworkStatus.refetch ? (
+        <Spinner />
+      ) : (
+        <EventCardList events={data?.events || []} />
+      )}
       <ModalDialog
         is_open={open_dialog}
         setIsOpen={() => setOpenDialog(false)}

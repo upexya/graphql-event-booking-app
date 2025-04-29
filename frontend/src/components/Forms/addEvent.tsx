@@ -19,7 +19,9 @@ interface EventInput {
   price?: number;
 }
 
-export default function AddEventForm(props: { onCreateEvent?: () => void }) {
+export default function AddEventForm(props: {
+  onCreateEvent?: (event: any) => void;
+}) {
   const { onCreateEvent } = props;
 
   const {
@@ -52,7 +54,7 @@ export default function AddEventForm(props: { onCreateEvent?: () => void }) {
         },
       },
     });
-    if (onCreateEvent) onCreateEvent();
+    if (onCreateEvent) onCreateEvent(data);
   };
 
   return (

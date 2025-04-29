@@ -75,7 +75,9 @@ const createEvent = async ({
 
 const getEvents = async () => {
   try {
-    const events = await Event.find().populate("created_by", "-password");
+    const events = await Event.find()
+      .populate("created_by", "-password")
+      .sort({ createdAt: "desc", title: "asc" });
 
     return events.map((event) => transformEvent(event));
 
