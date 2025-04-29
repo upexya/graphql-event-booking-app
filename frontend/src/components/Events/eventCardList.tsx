@@ -18,7 +18,8 @@ export interface IEvent {
   created_by: {
     _id: string;
     name: string;
-  }[];
+    avatar?: string;
+  };
 }
 
 export default function EventCardList(props: { events: IEvent[] }) {

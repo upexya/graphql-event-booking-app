@@ -36,7 +36,7 @@ export default function AddEventForm(props: {
 
   const { user } = useContext(UserContext);
 
-  const [createEvent, { loading, error, data }] = useMutation(CREATE_EVENT);
+  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT);
 
   const onSubmit: SubmitHandler<EventInput> = async (data) => {
     if (!isValid) return;
