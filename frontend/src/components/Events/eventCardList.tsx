@@ -1,6 +1,12 @@
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationDot,
+  faEuroSign,
+  faCalendarDay,
+} from "@fortawesome/free-solid-svg-icons";
+
+import getReadableDateTime from "@utils/getReadableDateTime";
 
 export interface IEvent {
   _id: string;
@@ -30,18 +36,45 @@ export default function EventCardList(props: { events: IEvent[] }) {
 }
 
 const EventCard = (props: { event: IEvent }) => {
-  const { _id, title, description, location, price, created_by } = props.event;
+  const { _id, title, description, location, price, date, created_by } =
+    props.event;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleViewDetails = () => {
+    searchParams.set("modal", _id);
+    setSearchParams(searchParams);
+  };
+
+  const event_details_content = (
+    <div>
+      <p className="text-lg font-bold text-primary">{title}</p>
+      <p className="mt-1 mb-3 truncate text-xs/5 text-gray-500">
+        <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
+        {location} |
+        {price ? <FontAwesomeIcon icon={faEuroSign} className="ml-2" /> : null}
+        {!price ? " Free Event " : price} |
+        <FontAwesomeIcon icon={faCalendarDay} className="mx-2" />
+        {getReadableDateTime(date)}
+      </p>
+    </div>
+  );
+
   return (
-    <li className="flex justify-between py-5 px-3 border-b-1 border-gray-200 hover:shadow-lg">
-      <Link to="#">
-        <div className="min-w-0 flex-auto">
-          <p className="text-sm/6 font-semibold text-primary">{title}</p>
-          <p className="mt-1 truncate text-xs/5 text-gray-500">
-            <FontAwesomeIcon icon={faLocationDot} /> {location}
-          </p>
-          <p className="text-sm/6 text-gray-900">{description}</p>
+    <li className="py-5 px-3 border-b-1 border-gray-200 overflow-hidden">
+      <div className="min-w-0 flex-auto">
+        <div className="flex justify-between mb-2 flex-col md:flex-row ">
+          {event_details_content}
+          <button
+            onClick={handleViewDetails}
+            className="hover:border-b-2 h-fit cursor-pointer text-white font-semibold md:text-primary bg-primary md:bg-white md:mx-3 p-2 md:p-0 rounded-md md:rounded-none"
+          >
+            View Details
+          </button>
         </div>
-      </Link>
+
+        <p className="text-sm/6 text-gray-900 text-justify">{description}</p>
+      </div>
     </li>
   );
 };

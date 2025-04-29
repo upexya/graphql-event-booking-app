@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, NetworkStatus } from "@apollo/client";
 
 import Toast from "@components/Common/Toast";
@@ -11,7 +12,9 @@ import { GET_EVENTS } from "@queries/event";
 import Spinner from "@components/Common/Spinner";
 
 export default function Events() {
-  const [open_dialog, setOpenDialog] = useState(false);
+  const [create_event_dialog, setCreateEventDialog] = useState(false);
+  const [view_event_dialog, setViewEventDialog] = useState(false);
+  const [active_event, setActiveEvent] = useState<IEvent>();
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
     GET_EVENTS,
@@ -20,9 +23,29 @@ export default function Events() {
     }
   );
 
+  const [search_params, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (search_params.get("modal") && !loading && data?.events?.length) {
+      const _active_event = data.events.find(
+        (e: IEvent) => e._id === search_params.get("modal")
+      );
+      setActiveEvent(_active_event);
+      setViewEventDialog(true);
+    } else if (!search_params.get("modal") && view_event_dialog) {
+      setViewEventDialog(false);
+      setActiveEvent(undefined);
+      resetUrlParam();
+    }
+  }, [search_params, loading]);
+
   const onCreateEvent = (new_event: IEvent) => {
     refetch();
-    setOpenDialog(false);
+    setCreateEventDialog(false);
+  };
+
+  const resetUrlParam = () => {
+    search_params.delete("modal");
+    setSearchParams(search_params);
   };
 
   if (loading) {
@@ -54,7 +77,7 @@ export default function Events() {
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <button
-            onClick={() => setOpenDialog(!open_dialog)}
+            onClick={() => setCreateEventDialog(!create_event_dialog)}
             className="cursor-pointer inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
           >
             Get started
@@ -76,12 +99,22 @@ export default function Events() {
         <EventCardList events={data?.events || []} />
       )}
       <ModalDialog
-        is_open={open_dialog}
-        setIsOpen={() => setOpenDialog(false)}
+        is_open={create_event_dialog}
+        setIsOpen={() => setCreateEventDialog(false)}
         title={"Add your event"}
         width="500px"
       >
         <AddEventForm onCreateEvent={onCreateEvent} />
+      </ModalDialog>
+
+      <ModalDialog
+        is_open={view_event_dialog}
+        setIsOpen={() => setViewEventDialog(false)}
+        onClose={resetUrlParam}
+        title={"View Event"}
+        width="500px"
+      >
+        <h1>{active_event?.title}</h1>
       </ModalDialog>
     </div>
   );

@@ -5,10 +5,11 @@ export default function Modal(props: {
   children?: React.ReactNode;
   is_open: boolean;
   setIsOpen: (is_open: boolean) => void;
+  onClose?: () => void;
   title: string;
   width?: string;
 }) {
-  const { children, is_open, setIsOpen, title, width } = props;
+  const { children, is_open, setIsOpen, title, width, onClose } = props;
 
   if (!is_open) return null;
 
@@ -35,7 +36,10 @@ export default function Modal(props: {
                 {title}
               </h3>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  if (onClose) onClose();
+                  setIsOpen(false);
+                }}
                 type="button"
                 className="cursor-pointer text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                 data-modal-hide="default-modal"
