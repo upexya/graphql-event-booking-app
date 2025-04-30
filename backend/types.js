@@ -84,6 +84,14 @@ const BookingType = new GraphQLObjectType({
   }),
 });
 
+const FindBookingInputType = new GraphQLInputObjectType({
+  name: "FindBookingInput",
+  fields: {
+    event_id: { type: new GraphQLNonNull(GraphQLID) },
+    user_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+});
+
 const BookingStatusEnum = new GraphQLEnumType({
   name: "BookingStatus",
   values: {
@@ -118,6 +126,7 @@ module.exports = {
   EventType,
   EventInputType,
   BookingType,
+  FindBookingInputType,
   BookingInputType,
   BookingUpdateInputType,
 };

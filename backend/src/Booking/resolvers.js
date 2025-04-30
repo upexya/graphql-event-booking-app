@@ -73,11 +73,15 @@ const updateBookingStatus = async ({ _id, status }) => {
   }
 };
 
-const getBookings = async () => {
+const getBookings = async ({ event_id, user_id }) => {
   try {
-    const bookings = await Booking.find()
-      .populate("event")
-      .populate("user", "-password");
+    const bookings =
+      event_id && user_id
+        ? await Booking.find({ event: event_id, user: user_id }).populate(
+            "user",
+            "-password"
+          )
+        : await Booking.find().populate("event").populate("user", "-password");
     await UserModel.populate(bookings, {
       path: "event.created_by",
       select: "-password",
