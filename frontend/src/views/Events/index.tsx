@@ -1,7 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { useQuery, useMutation, NetworkStatus } from "@apollo/client";
+import {
+  useQuery,
+  useMutation,
+  NetworkStatus,
+  useLazyQuery,
+} from "@apollo/client";
 
 import Toast from "@components/Common/Toast";
 import ModalDialog from "@components/Common/Modal";
@@ -16,7 +21,11 @@ import booking_status from "@constants/booking_status";
 import { UserContext } from "@context/user";
 
 import { GET_EVENTS } from "@queries/event";
-import { CREATE_BOOKING } from "@queries/booking";
+import {
+  CREATE_BOOKING,
+  GET_BOOKINGS,
+  UPDATE_BOOKING_STATUS,
+} from "@queries/booking";
 
 export default function Events() {
   const [create_event_dialog, setCreateEventDialog] = useState(false);
@@ -33,6 +42,15 @@ export default function Events() {
   );
 
   const [
+    getBookingStatus,
+    {
+      loading: get_booking_loading,
+      data: get_booking_data,
+      error: get_booking_error,
+    },
+  ] = useLazyQuery(GET_BOOKINGS);
+
+  const [
     createBooking,
     {
       loading: create_booking_loading,
@@ -41,22 +59,35 @@ export default function Events() {
     },
   ] = useMutation(CREATE_BOOKING);
 
+  const [
+    updateBookingStatus,
+    { loading: update_status_loading, error: update_status_error },
+  ] = useMutation(UPDATE_BOOKING_STATUS);
+
   const [search_params, setSearchParams] = useSearchParams();
+  const modal_id = search_params?.get("modal");
+
   useEffect(() => {
-    if (search_params.get("modal") && !loading && data?.events?.length) {
-      const _active_event = data.events.find(
-        (e: IEvent) => e._id === search_params.get("modal")
-      );
+    if (modal_id && !loading && data?.events?.length) {
+      const _active_event = data.events.find((e: IEvent) => e._id === modal_id);
       setActiveEvent(_active_event);
+      getBookingStatus({
+        variables: {
+          input: {
+            event_id: modal_id,
+            user_id: user?.user?._id,
+          },
+        },
+      });
       setViewEventDialog(true);
-    } else if (!search_params.get("modal") && view_event_dialog) {
+    } else if (!modal_id && view_event_dialog) {
       setViewEventDialog(false);
       setActiveEvent(undefined);
       resetUrlParam();
     }
   }, [search_params, loading]);
 
-  const onCreateEvent = (new_event: IEvent) => {
+  const onCreateEvent = () => {
     refetch();
     setCreateEventDialog(false);
   };
@@ -67,16 +98,33 @@ export default function Events() {
   };
 
   const handleBookEvent = async () => {
-    await createBooking({
-      variables: {
-        input: {
-          event_id: search_params.get("modal"),
-          user_id: user?.user?._id,
-          status: booking_status.CONFIRMED,
+    const current_booking = get_booking_data?.bookings?.[0];
+    if (current_booking?.status && current_booking?.event?._id === modal_id) {
+      const updated_status =
+        current_booking?.status === booking_status.CONFIRMED
+          ? booking_status.CANCELLED
+          : booking_status.CONFIRMED;
+      await updateBookingStatus({
+        variables: {
+          input: {
+            _id: current_booking?._id,
+            status: updated_status,
+          },
         },
-      },
-    });
-    toast("Booking made sucessfully!");
+      });
+      toast("Booking status updated sucessfully!");
+    } else {
+      await createBooking({
+        variables: {
+          input: {
+            event_id: modal_id,
+            user_id: user?.user?._id,
+            status: booking_status.CONFIRMED,
+          },
+        },
+      });
+      toast("Booking made sucessfully!");
+    }
     setViewEventDialog(false);
     resetUrlParam();
     resetCreateBooking();
@@ -155,8 +203,15 @@ export default function Events() {
           <EventDetails
             event={active_event}
             handleBookEvent={handleBookEvent}
-            loading={create_booking_loading}
-            error={create_booking_error}
+            loading={
+              create_booking_loading ||
+              get_booking_loading ||
+              update_status_loading
+            }
+            error={
+              create_booking_error || get_booking_error || update_status_error
+            }
+            booking_status={get_booking_data?.bookings?.[0]?.status}
           />
         </ModalDialog>
       ) : null}

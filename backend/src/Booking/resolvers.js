@@ -77,10 +77,9 @@ const getBookings = async ({ event_id, user_id }) => {
   try {
     const bookings =
       event_id && user_id
-        ? await Booking.find({ event: event_id, user: user_id }).populate(
-            "user",
-            "-password"
-          )
+        ? await Booking.find({ event: event_id, user: user_id })
+            .populate("event")
+            .populate("user", "-password")
         : await Booking.find().populate("event").populate("user", "-password");
     await UserModel.populate(bookings, {
       path: "event.created_by",

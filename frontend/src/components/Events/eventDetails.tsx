@@ -15,6 +15,8 @@ import { UserContext } from "@context/user";
 import Toast from "@components/Common/Toast";
 import Spinner from "@components/Common/Spinner";
 
+import status from "@constants/booking_status";
+
 import default_user from "@assets/default-user.jpg";
 
 export default function EventDetails(props: {
@@ -22,10 +24,10 @@ export default function EventDetails(props: {
   handleBookEvent: () => void;
   loading?: boolean;
   error?: ApolloError;
+  booking_status?: "CONFIRMED" | "CANCELLED";
 }) {
-  const { loading, handleBookEvent, error } = props;
-  const { _id, title, description, date, created_by, location, price } =
-    props.event;
+  const { loading, handleBookEvent, error, booking_status } = props;
+  const { title, description, date, created_by, location, price } = props.event;
 
   const { user } = useContext(UserContext);
   const is_own_event = user?.user?._id === created_by?._id;
@@ -59,6 +61,12 @@ export default function EventDetails(props: {
     </div>
   );
 
+  const button_text = !booking_status
+    ? "Book Now"
+    : booking_status === status.CONFIRMED
+    ? "Cancel Booking"
+    : "Rebook Event";
+
   return (
     <div className="px-3 overflow-hidden">
       {error ? (
@@ -77,9 +85,11 @@ export default function EventDetails(props: {
             if (!loading) handleBookEvent();
           }}
           disabled={loading}
-          className="mt-3 font-semibold cursor-pointer rounded-md bg-primary px-3 py-2 text-white"
+          className={`mt-3 font-semibold cursor-pointer rounded-md px-3 py-2 text-white ${
+            booking_status === "CONFIRMED" ? "bg-red-400" : "bg-primary"
+          }`}
         >
-          {loading ? <Spinner /> : "Book Now"}
+          {loading ? <Spinner /> : button_text}
         </button>
       </div>
     </div>
