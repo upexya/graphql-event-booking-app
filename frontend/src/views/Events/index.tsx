@@ -48,7 +48,7 @@ export default function Events() {
       data: get_booking_data,
       error: get_booking_error,
     },
-  ] = useLazyQuery(GET_BOOKINGS);
+  ] = useLazyQuery(GET_BOOKINGS, { fetchPolicy: "network-only" });
 
   const [
     createBooking,
