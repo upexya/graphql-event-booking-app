@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { ApolloError } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,6 +10,7 @@ import {
 
 import { IEvent } from "./eventCardList";
 import getReadableDateTime from "@utils/getReadableDateTime";
+import isTokenValid from "@utils/isTokenValid";
 
 import { UserContext } from "@context/user";
 
@@ -18,6 +20,7 @@ import Spinner from "@components/Common/Spinner";
 import status from "@constants/booking_status";
 
 import default_user from "@assets/default-user.jpg";
+import routes from "@constants/routes";
 
 export default function EventDetails(props: {
   event: IEvent;
@@ -80,17 +83,26 @@ export default function EventDetails(props: {
       <div className="min-w-0 flex-auto">
         {event_details_content}
         <p className="text-sm/6 text-gray-900 text-justify">{description}</p>
-        <button
-          onClick={() => {
-            if (!loading) handleBookEvent();
-          }}
-          disabled={loading}
-          className={`mt-3 font-semibold cursor-pointer rounded-md px-3 py-2 text-white ${
-            booking_status === "CONFIRMED" ? "bg-red-400" : "bg-primary"
-          }`}
-        >
-          {loading ? <Spinner /> : button_text}
-        </button>
+        {isTokenValid() ? (
+          <button
+            onClick={() => {
+              if (!loading) handleBookEvent();
+            }}
+            disabled={loading}
+            className={`mt-3 font-semibold cursor-pointer rounded-md px-3 py-2 text-white ${
+              booking_status === "CONFIRMED" ? "bg-red-400" : "bg-primary"
+            }`}
+          >
+            {loading ? <Spinner /> : button_text}
+          </button>
+        ) : (
+          <Link
+            to={routes.LOGIN}
+            className="mt-3 block font-semibold cursor-pointer rounded-md text-blue-500 hover:text-blue-600 underline"
+          >
+            Login to Book
+          </Link>
+        )}
       </div>
     </div>
   );

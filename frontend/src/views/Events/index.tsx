@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import {
   useQuery,
@@ -16,9 +16,12 @@ import EventCardList, { IEvent } from "@components/Events/eventCardList";
 import EventDetails from "@components/Events/eventDetails";
 import Spinner from "@components/Common/Spinner";
 
+import routes from "@constants/routes";
 import booking_status from "@constants/booking_status";
 
 import { UserContext } from "@context/user";
+
+import isTokenValid from "@utils/isTokenValid";
 
 import { GET_EVENTS } from "@queries/event";
 import {
@@ -71,13 +74,14 @@ export default function Events() {
     if (modal_id && !loading && data?.events?.length) {
       const _active_event = data.events.find((e: IEvent) => e._id === modal_id);
       setActiveEvent(_active_event);
-      getBookingStatus({
-        variables: {
-          input: {
-            event_id: modal_id,
+      if (isTokenValid())
+        getBookingStatus({
+          variables: {
+            input: {
+              event_id: modal_id,
+            },
           },
-        },
-      });
+        });
       setViewEventDialog(true);
     } else if (!modal_id && view_event_dialog) {
       setViewEventDialog(false);
@@ -97,6 +101,8 @@ export default function Events() {
   };
 
   const handleBookEvent = async () => {
+    if (!isTokenValid()) return;
+
     const current_booking = get_booking_data?.bookings?.[0];
     if (current_booking?.status && current_booking?.event?._id === modal_id) {
       const updated_status =
@@ -157,12 +163,21 @@ export default function Events() {
           bringing people together!
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-          <button
-            onClick={() => setCreateEventDialog(!create_event_dialog)}
-            className="cursor-pointer inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
-          >
-            Get started
-          </button>
+          {isTokenValid() ? (
+            <button
+              onClick={() => setCreateEventDialog(!create_event_dialog)}
+              className="cursor-pointer inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+            >
+              Get started
+            </button>
+          ) : (
+            <Link
+              to={routes.SIGNUP}
+              className="cursor-pointer inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+            >
+              Get started
+            </Link>
+          )}
         </div>
       </div>
     </section>
