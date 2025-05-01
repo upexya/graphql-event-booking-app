@@ -1,12 +1,11 @@
 import { useEffect, useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import routes from "@constants/routes";
 
 import Auth from "@views/Auth";
 import Events from "@views/Events";
 import Bookings from "@views/Bookings";
-import Home from "@views/Home";
 
 import Layout from "@components/Layout";
 import RequireAuth from "@components/Common/RequireAuth";
@@ -30,7 +29,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path={routes.HOME} element={<Layout />}>
-          <Route path={routes.HOME} element={<Home />} />
+          <Route path={routes.HOME} element={<Navigate to={routes.EVENTS} />} />
           <Route path={routes.AUTH} element={<Auth />} />
           <Route path={routes.EVENTS} element={<Events />} />
           <Route

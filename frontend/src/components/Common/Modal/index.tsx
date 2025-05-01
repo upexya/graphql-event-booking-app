@@ -21,10 +21,10 @@ export default function Modal(props: {
         aria-hidden="true"
         className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full h-full max-h-full bg-backdrop"
       >
-        <div className="relative p-10 w-full h-full flex justify-center items-center">
+        <div className="relative py-10 w-full h-full flex justify-center items-center px-1 md:px-10">
           {/* <!-- Modal content --> */}
           <div
-            className="relative bg-white rounded-lg shadow-sm max-w-2xl overflow-y-scroll"
+            className="relative bg-white rounded-lg shadow-sm overflow-y-scroll"
             style={{
               maxHeight: "95vh",
               width: width || "auto",

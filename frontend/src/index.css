@@ -24,6 +24,10 @@ body {
   --font-work-sans: 'Work Sans', sans-serif;
 }
 
+.no-mobile-scroll {
+	overflow: hidden;
+}
+
 .animate-slide-down {
 	animation-name: slideDown;
 	-webkit-animation-name: slideDown;	
@@ -69,4 +73,10 @@ body {
 		transform: translateY(-100%);
     display: none;
   }		
+}
+
+@media only screen and (min-width: 40rem) {
+	.no-mobile-scroll {
+		overflow: unset;
+	}
 }

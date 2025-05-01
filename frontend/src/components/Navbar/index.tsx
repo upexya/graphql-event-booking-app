@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from "react";
+import { useState, useContext, useMemo, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,11 +17,19 @@ export default function Navbar() {
   const [navbar_expanded, setNavbarExpanded] = useState(false);
   const [show_user_dropdown, setShowUserDropdown] = useState(false);
 
+  useEffect(() => {
+    const el_body = document.getElementsByTagName("body")?.[0];
+    if (!el_body) return;
+
+    if (navbar_expanded) {
+      el_body.classList.add("no-mobile-scroll");
+    } else {
+      el_body.classList.remove("no-mobile-scroll");
+    }
+  }, [navbar_expanded]);
+
   const nav_items = useMemo(() => {
-    let items = [
-      { name: "Home", link: routes.HOME },
-      { name: "Events", link: routes.EVENTS },
-    ];
+    let items = [{ name: "Events", link: routes.EVENTS }];
     if (is_logged_in) items.push({ name: "Bookings", link: routes.BOOKINGS });
 
     return items;
