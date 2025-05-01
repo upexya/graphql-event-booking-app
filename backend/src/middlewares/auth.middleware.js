@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
   try {
     const decoded_token = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded_token) {
-      req.user_id = decoded_token.user_id;
+      req.user_id = decoded_token.id;
       req.is_auth = true;
       return next();
     }

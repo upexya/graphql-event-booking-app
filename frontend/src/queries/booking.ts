@@ -15,6 +15,14 @@ export const GET_BOOKINGS = gql`
       status
       event {
         _id
+        title
+        description
+        location
+        date
+        price
+        created_by {
+          _id
+        }
       }
       user {
         _id

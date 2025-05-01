@@ -12,8 +12,8 @@ const bookings_query = {
     if (!req?.raw?.is_auth) {
       throw new Error("Unauthorized");
     }
-    const { event_id, user_id } = input || {};
-    return await getBookings({ event_id, user_id });
+    const { event_id } = input || {};
+    return await getBookings(req?.raw?.user_id, event_id);
   },
 };
 

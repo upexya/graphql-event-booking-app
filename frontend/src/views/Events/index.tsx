@@ -75,7 +75,6 @@ export default function Events() {
         variables: {
           input: {
             event_id: modal_id,
-            user_id: user?.user?._id,
           },
         },
       });

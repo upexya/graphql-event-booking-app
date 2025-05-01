@@ -88,7 +88,6 @@ const FindBookingInputType = new GraphQLInputObjectType({
   name: "FindBookingInput",
   fields: {
     event_id: { type: new GraphQLNonNull(GraphQLID) },
-    user_id: { type: new GraphQLNonNull(GraphQLID) },
   },
 });
 

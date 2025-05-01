@@ -4,9 +4,12 @@ import {
   faLocationDot,
   faEuroSign,
   faCalendarDay,
+  faCircleXmark,
+  faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 import getReadableDateTime from "@utils/getReadableDateTime";
+import booking_status from "@constants/booking_status";
 
 export interface IEvent {
   _id: string;
@@ -20,6 +23,8 @@ export interface IEvent {
     name: string;
     avatar?: string;
   };
+  status?: "CONFIRMED" | "CANCELLED";
+  booking_id?: string;
 }
 
 export default function EventCardList(props: { events: IEvent[] }) {
@@ -37,7 +42,7 @@ export default function EventCardList(props: { events: IEvent[] }) {
 }
 
 const EventCard = (props: { event: IEvent }) => {
-  const { _id, title, description, location, price, date, created_by } =
+  const { _id, title, description, location, price, date, status } =
     props.event;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,9 +52,22 @@ const EventCard = (props: { event: IEvent }) => {
     setSearchParams(searchParams);
   };
 
+  const status_content = !status ? (
+    <></>
+  ) : status === booking_status.CANCELLED ? (
+    <small className="text-red-400">
+      <FontAwesomeIcon icon={faCircleXmark} /> You cancelled.
+    </small>
+  ) : (
+    <small className="text-blue-400">
+      <FontAwesomeIcon icon={faCircleCheck} /> You are attending.
+    </small>
+  );
+
   const event_details_content = (
     <div>
       <p className="text-lg font-bold text-primary">{title}</p>
+      {status_content}
       <p className="mt-1 mb-3 truncate text-xs/5 text-gray-500">
         <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
         {location} |
