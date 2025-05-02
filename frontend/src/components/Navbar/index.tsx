@@ -163,7 +163,7 @@ export default function Navbar() {
       </div>
       <div
         style={{
-          height: "64px",
+          height: "80px",
           width: "100%",
         }}
       />
