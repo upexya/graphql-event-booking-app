@@ -101,16 +101,26 @@ This project was built primarily to:
 ## 📸 Screenshots
 
 - **Events/ Home page**
+  <br/>
   <img width="500" alt="Events/ Home page screenshot" src="https://github.com/user-attachments/assets/1c945db6-5f0c-49dd-8278-4d501759f1c1" />
+  <br/>
 
 - **Create Event Modal**:
+  <br/>
   <img width="500" alt="Create Event Modal screenshot" src="https://github.com/user-attachments/assets/2249b069-2e37-4daa-9746-4f79ad93d115" />
+  <br/>
 
 - **Booking History Page**:
+  <br/>
   <img width="500" alt="Booking History Page Screenshot" src="https://github.com/user-attachments/assets/69f58771-b50b-41d1-b9f2-c4a6bd1a6ee1" />
+  <br/>
 
 - **Event Detail Modal with ability to Cancel Bookings**:
+  <br/>
   <img width="500" alt="Event Details Modal screenshot" src="https://github.com/user-attachments/assets/de40d23b-bd78-4a1b-8997-379fb7bdf513" />
+  <br/>
 
 - **Collapsible Navbar for Responsive View**:
+  <br/>
   <img width="250" alt="Collapsible Navbar Screenshot" src="https://github.com/user-attachments/assets/92566779-b73c-46f1-86f9-2d7a894e428c" />
+  <br/>
